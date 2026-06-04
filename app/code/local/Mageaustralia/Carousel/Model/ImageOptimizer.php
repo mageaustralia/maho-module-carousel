@@ -80,10 +80,17 @@ class Mageaustralia_Carousel_Model_ImageOptimizer extends Mage_Core_Model_Abstra
         }
 
         $iterator = $options['recursive']
-            ? new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory))
+            ? new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+                $directory,
+                FilesystemIterator::SKIP_DOTS,
+            ))
             : new DirectoryIterator($directory);
 
         foreach ($iterator as $file) {
+            // Never follow symlinks out of the media tree we were asked to walk.
+            if ($file->isLink()) {
+                continue;
+            }
             if ($file->isFile()) {
                 $ext = strtolower(pathinfo((string) $file->getPathname(), PATHINFO_EXTENSION));
 
@@ -265,9 +272,15 @@ class Mageaustralia_Carousel_Model_ImageOptimizer extends Mage_Core_Model_Abstra
         $largeImages = [];
         $extensions = ['jpg', 'jpeg', 'png', 'gif'];
 
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
+            $directory,
+            FilesystemIterator::SKIP_DOTS,
+        ));
 
         foreach ($iterator as $file) {
+            if ($file->isLink()) {
+                continue;
+            }
             if ($file->isFile()) {
                 $ext = strtolower(pathinfo((string) $file->getPathname(), PATHINFO_EXTENSION));
 

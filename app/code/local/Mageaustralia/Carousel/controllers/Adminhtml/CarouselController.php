@@ -14,6 +14,24 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
     public const ADMIN_RESOURCE = 'admin/cms/carousel';
 
     /**
+     * Force form_key (CSRF token) validation on all state-changing actions.
+     */
+    #[\Override]
+    public function preDispatch()
+    {
+        $this->_setForcedFormKeyActions([
+            'save',
+            'delete',
+            'massDelete',
+            'saveSlide',
+            'deleteSlide',
+            'updateSlideOrder',
+            'uploadImage',
+        ]);
+        return parent::preDispatch();
+    }
+
+    /**
      * Check ACL permissions
      */
     #[\Override]
@@ -200,17 +218,31 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
     protected function _processImageUpload(array $fileData, int|string $carouselId): ?string
     {
         try {
+            // Sanitise the carousel id used as a directory name: digits only, or
+            // the literal "temp" bucket. Prevents path traversal / null-byte
+            // injection through the carousel_id request param.
+            $safeId = ((string) $carouselId === 'temp') ? 'temp' : (string) (int) $carouselId;
+
             $uploader = new Varien_File_Uploader($fileData);
             $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png', 'webp']);
+            // Validate by real (finfo-detected) content type, not just the
+            // extension/client header. Blocks PHP or SVG-with-script renamed to
+            // an image extension.
+            $uploader->setValidMimeTypes([
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/webp',
+            ]);
             $uploader->setAllowRenameFiles(true);
             $uploader->setFilesDispersion(false);
 
             // Use public/media directory for MAHO
-            $mediaPath = BP . DS . 'public' . DS . 'media' . DS . 'carousel' . DS . $carouselId;
+            $mediaPath = BP . DS . 'public' . DS . 'media' . DS . 'carousel' . DS . $safeId;
 
             // Create directory if it doesn't exist
             if (!file_exists($mediaPath)) {
-                mkdir($mediaPath, 0777, true);
+                mkdir($mediaPath, 0775, true);
             }
             $result = $uploader->save($mediaPath);
 
@@ -219,7 +251,7 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
                 $imageModel = Mage::getModel('carousel/image');
                 $processed = $imageModel->processCarouselImage(
                     $result['path'] . DS . $result['file'],
-                    $carouselId,
+                    $safeId,
                     [
                         'formats' => ['webp', 'avif', 'original'],
                         'quality' => 85,
@@ -227,7 +259,7 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
                 );
 
                 // Return the original path, but we'll have WebP/AVIF versions available
-                return $carouselId . '/' . $result['file'];
+                return $safeId . '/' . $result['file'];
             }
         } catch (Exception $e) {
             Mage::logException($e);
@@ -362,10 +394,6 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
             if (!$carouselId) {
                 throw new Exception('Carousel ID is required');
             }
-
-            // Log the incoming data for debugging
-            Mage::log('Slide save data: ' . print_r($data, true), null, 'carousel.log');
-            Mage::log('Files: ' . print_r($_FILES, true), null, 'carousel.log');
 
             if (!empty($data['slide_id'])) {
                 $slide = Mage::getModel('carousel/slide')->load($data['slide_id']);

@@ -60,7 +60,7 @@ class Mageaustralia_Carousel_Model_Image extends Mage_Core_Model_Abstract
         // Create destination directory if it doesn't exist
         $mediaPath = Mage::getBaseDir('media') . DS . 'carousel' . DS . $destinationDir;
         if (!is_dir($mediaPath)) {
-            mkdir($mediaPath, 0777, true);
+            mkdir($mediaPath, 0775, true);
         }
 
         // Get original file info

@@ -26,9 +26,15 @@ $height   = $carousel->getHeight();
 
 $flexMap  = ['top' => 'flex-start', 'center' => 'center', 'bottom' => 'flex-end', 'left' => 'flex-start', 'right' => 'flex-end'];
 $alignMap = ['left' => 'left', 'center' => 'center', 'right' => 'right'];
+
+// Constrain admin-authored values that land in inline style="..." declarations
+// to a safe character set, so a stray ";" / "(" cannot inject extra CSS
+// declarations (e.g. background:url(...)) even though the source is trusted.
+$cssToken = static fn(string $v): string => preg_replace('/[^a-zA-Z0-9#%.,()\s\-]/', '', $v);
+
 $i = 0;
 ?>
-<div class="mhc" id="<?= $this->escapeHtml($htmlId) ?>" data-mhc data-mhc-autoplay="<?= (int) $autoplay ?>"<?php if ($height): ?> style="--mhc-h:<?= $this->escapeHtml($height) ?>"<?php endif; ?>>
+<div class="mhc" id="<?= $this->escapeHtml($htmlId) ?>" data-mhc data-mhc-autoplay="<?= (int) $autoplay ?>"<?php if ($height): ?> style="--mhc-h:<?= $this->escapeHtml($cssToken((string) $height)) ?>"<?php endif; ?>>
     <div class="mhc__viewport">
         <div class="mhc__track">
             <?php foreach ($slides as $slide): ?>
@@ -65,7 +71,7 @@ $i = 0;
                         <?php endif; ?>
                         <?php if ($hasText): ?>
                             <div class="mhc__caption" style="justify-content:<?= $vert ?>;align-items:<?= $horiz ?>">
-                                <div class="mhc__inner" style="max-width:min(<?= $this->escapeHtml($width) ?>,calc(100% - 4rem));text-align:<?= $textAlign ?>;color:<?= $this->escapeHtml($colorCss) ?>">
+                                <div class="mhc__inner" style="max-width:min(<?= $this->escapeHtml($cssToken($width)) ?>,calc(100% - 4rem));text-align:<?= $textAlign ?>;color:<?= $this->escapeHtml($cssToken($colorCss)) ?>">
                                     <?php if ($slide->getTitle()): ?><h2 class="mhc__title"><?= $this->escapeHtml($slide->getTitle()) ?></h2><?php endif; ?>
                                     <?php if ($slide->getSubtitle()): ?><p class="mhc__subtitle"><?= $this->escapeHtml($slide->getSubtitle()) ?></p><?php endif; ?>
                                     <?php if (!empty($buttons)): ?>

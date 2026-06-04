@@ -95,6 +95,9 @@ class Mageaustralia_Carousel_Model_Cron
             if ($deadline && time() > $deadline) {
                 break;
             }
+            if ($file->isLink()) {
+                continue;
+            }
             if ($file->isFile()) {
                 $ext = strtolower(pathinfo((string) $file->getPathname(), PATHINFO_EXTENSION));
                 if (in_array($ext, $extensions, true) && $file->getMTime() >= $since) {

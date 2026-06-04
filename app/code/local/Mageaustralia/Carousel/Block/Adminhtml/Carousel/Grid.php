@@ -92,7 +92,10 @@ class Mageaustralia_Carousel_Block_Adminhtml_Carousel_Grid extends Mage_Adminhtm
                 ],
                 [
                     'caption' => Mage::helper('carousel')->__('Delete'),
-                    'url' => ['base' => '*/*/delete'],
+                    'url' => [
+                        'base' => '*/*/delete',
+                        'params' => ['form_key' => Mage::getSingleton('core/session')->getFormKey()],
+                    ],
                     'field' => 'id',
                     'confirm' => Mage::helper('carousel')->__('Are you sure you want to delete this carousel?'),
                 ],

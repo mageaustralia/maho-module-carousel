@@ -33,7 +33,7 @@ if (!$carousel || !$carousel->getId()): ?>
                         <div class="slide-handle">☰</div>
                         <div class="slide-preview">
                             <?php if ($slide->getImage()): ?>
-                                <img src="<?= $this->getMediaUrl() ?>carousel/<?= $slide->getImage() ?>" alt="<?= $this->escapeHtml($slide->getTitle()) ?>">
+                                <img src="<?= $this->escapeUrl($this->getMediaUrl() . 'carousel/' . $slide->getImage()) ?>" alt="<?= $this->escapeHtml($slide->getTitle()) ?>">
                             <?php else: ?>
                                 <div class="no-image"><?= $this->__('No Image') ?></div>
                             <?php endif; ?>
