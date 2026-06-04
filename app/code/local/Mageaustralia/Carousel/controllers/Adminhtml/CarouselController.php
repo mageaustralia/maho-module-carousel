@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Mageaustralia_Carousel
+ *
+ * @copyright  Copyright (c) 2026 Mage Australia (https://mageaustralia.com.au)
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
 class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml_Controller_Action
 {
     public const ADMIN_RESOURCE = 'admin/cms/carousel';
