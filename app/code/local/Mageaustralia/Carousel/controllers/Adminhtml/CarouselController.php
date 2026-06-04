@@ -23,6 +23,7 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
             'save',
             'delete',
             'massDelete',
+            'massStatus',
             'saveSlide',
             'deleteSlide',
             'updateSlideOrder',
@@ -370,6 +371,34 @@ class Mageaustralia_Carousel_Adminhtml_CarouselController extends Mage_Adminhtml
                 }
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                     $this->__('Total of %d carousel(s) were successfully deleted', count($carouselIds)),
+                );
+            } catch (Exception $e) {
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            }
+        }
+
+        $this->_redirect('*/*/index');
+    }
+
+    /**
+     * Mass status action
+     */
+    #[Maho\Config\Route('/admin/carousel/massStatus')]
+    public function massStatusAction(): void
+    {
+        $carouselIds = $this->getRequest()->getParam('carousel');
+        if (!is_array($carouselIds) || empty($carouselIds)) {
+            Mage::getSingleton('adminhtml/session')->addError($this->__('Please select carousel(s)'));
+        } else {
+            $status = (int) $this->getRequest()->getParam('status');
+            try {
+                foreach ($carouselIds as $carouselId) {
+                    $carousel = Mage::getModel('carousel/carousel')->load((int) $carouselId);
+                    $carousel->setStatus($status);
+                    $carousel->save();
+                }
+                Mage::getSingleton('adminhtml/session')->addSuccess(
+                    $this->__('Total of %d carousel(s) were successfully updated', count($carouselIds)),
                 );
             } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());

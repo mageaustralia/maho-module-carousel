@@ -131,6 +131,41 @@ class Mageaustralia_Carousel_Block_Widget extends Mage_Core_Block_Template imple
     }
 
     /**
+     * Sanitise a text-colour value for safe output in a class="..." or style="..." attribute.
+     *
+     * Accepts Tailwind class names (e.g. "text-white"), or raw CSS colour tokens
+     * (e.g. "#ffffff", "rgba(255,255,255,0.8)").
+     * Strips any characters outside a safe CSS/class-name character set so that
+     * admin-authored content cannot inject HTML or CSS declarations.
+     */
+    public function getSafeTextColor(string $value): string
+    {
+        return preg_replace('/[^a-zA-Z0-9#%.,()\s\-\/]/', '', $value);
+    }
+
+    /**
+     * Sanitise a button style class string for use in a class="..." attribute.
+     *
+     * Strips characters that are not valid in a CSS class name so that an
+     * admin-authored style value cannot inject HTML or CSS.
+     */
+    public function getSafeButtonStyle(string $style): string
+    {
+        return preg_replace('/[^a-zA-Z0-9\-_ ]/', '', $style);
+    }
+
+    /**
+     * Get a single text-alignment CSS class for a given alignment value.
+     *
+     * Convenience wrapper around getTextAlignmentClasses() that returns the
+     * flex-child alignment class used by DaisyUI-style templates.
+     */
+    public function getTextAlignmentClass(string $alignment): string
+    {
+        return $this->getTextAlignmentClasses($alignment);
+    }
+
+    /**
      * Process button text for markdown links
      * Converts ### to the slide's link URL
      */

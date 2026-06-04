@@ -36,7 +36,7 @@ class Mageaustralia_Carousel_Block_Adminhtml_Carousel_Edit_Tab_Slides extends Ma
 
     public function getUploadUrl(): string
     {
-        return $this->getUrl('*/*/uploadSlide', ['carousel_id' => $this->getCarousel()->getId()]);
+        return $this->getUrl('*/*/uploadImage', ['carousel_id' => $this->getCarousel()->getId()]);
     }
 
     public function getSaveSlideUrl(): string
