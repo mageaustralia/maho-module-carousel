@@ -1,0 +1,29 @@
+{
+    "name": "mageaustralia/maho-module-carousel",
+    "description": "CMS-driven carousel widget for Maho: a slides admin grid + a frontend widget, with a recent-image WebP optimization cron.",
+    "type": "maho-module",
+    "license": "OSL-3.0",
+    "homepage": "https://github.com/mageaustralia/maho-module-carousel",
+    "keywords": ["maho", "magento", "carousel", "widget", "slider"],
+    "authors": [
+        { "name": "Mage Australia", "email": "dev@mageaustralia.com.au", "homepage": "https://mageaustralia.com.au" }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "mahocommerce/maho": "^26.5"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11"
+    },
+    "autoload": {
+        "psr-0": { "Mageaustralia_Carousel_": "app/code/local/" }
+    },
+    "extra": {
+        "map": [
+            ["app/code/local/Mageaustralia/Carousel", "app/code/local/Mageaustralia/Carousel"],
+            ["app/etc/modules/Mageaustralia_Carousel.xml", "app/etc/modules/Mageaustralia_Carousel.xml"],
+            ["app/design/adminhtml/default/default/template/carousel", "app/design/adminhtml/default/default/template/carousel"],
+            ["app/design/frontend/base/default/template/carousel", "app/design/frontend/base/default/template/carousel"]
+        ]
+    }
+}

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Mageaustralia_Carousel>
+            <version>1.0.1</version>
+        </Mageaustralia_Carousel>
+    </modules>
+
+    <global>
+        <blocks>
+            <carousel>
+                <class>Mageaustralia_Carousel_Block</class>
+            </carousel>
+        </blocks>
+
+        <helpers>
+            <carousel>
+                <class>Mageaustralia_Carousel_Helper</class>
+            </carousel>
+        </helpers>
+
+        <models>
+            <carousel>
+                <class>Mageaustralia_Carousel_Model</class>
+                <resourceModel>carousel_resource</resourceModel>
+            </carousel>
+            <carousel_resource>
+                <class>Mageaustralia_Carousel_Model_Resource</class>
+                <entities>
+                    <carousel>
+                        <table>custom_carousel</table>
+                    </carousel>
+                    <slide>
+                        <table>custom_carousel_slide</table>
+                    </slide>
+                </entities>
+            </carousel_resource>
+        </models>
+
+        <resources>
+            <carousel_setup>
+                <setup>
+                    <module>Mageaustralia_Carousel</module>
+                </setup>
+            </carousel_setup>
+        </resources>
+    </global>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Mageaustralia_Carousel before="Mage_Adminhtml">Mageaustralia_Carousel_Adminhtml</Mageaustralia_Carousel>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <menu>
+            <cms>
+                <children>
+                    <carousel translate="title" module="carousel">
+                        <title>DaisyUI Carousel Builder</title>
+                        <sort_order>100</sort_order>
+                        <action>adminhtml/carousel/index</action>
+                    </carousel>
+                </children>
+            </cms>
+        </menu>
+
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <cms>
+                            <children>
+                                <carousel translate="title" module="carousel">
+                                    <title>DaisyUI Carousel Builder</title>
+                                    <sort_order>100</sort_order>
+                                </carousel>
+                            </children>
+                        </cms>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+
+        <layout>
+            <updates>
+                <carousel>
+                    <file>carousel.xml</file>
+                </carousel>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <frontend>
+        <layout>
+            <updates>
+                <carousel>
+                    <file>carousel.xml</file>
+                </carousel>
+            </updates>
+        </layout>
+    </frontend>
+
+    <crontab>
+        <jobs>
+            <carousel_optimize_images>
+                <schedule>
+                    <cron_expr>0 3 * * *</cron_expr><!-- Run daily at 3 AM -->
+                </schedule>
+                <run>
+                    <model>carousel/cron::optimizeRecentImages</model>
+                </run>
+            </carousel_optimize_images>
+        </jobs>
+    </crontab>
+</config>

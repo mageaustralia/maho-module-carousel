@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<widgets>
+    <carousel_widget type="carousel/widget" translate="name description" module="carousel">
+        <name>DaisyUI Carousel</name>
+        <description>Display a carousel with responsive images and modern format support</description>
+        <is_email_compatible>1</is_email_compatible>
+        <parameters>
+            <carousel_id translate="label">
+                <visible>1</visible>
+                <required>0</required>
+                <label>Select Carousel</label>
+                <type>select</type>
+                <source_model>carousel/source_carousel</source_model>
+                <description>Choose a carousel to display. You can also use the identifier parameter instead.</description>
+            </carousel_id>
+            <identifier translate="label">
+                <visible>1</visible>
+                <required>0</required>
+                <label>Carousel Identifier</label>
+                <type>text</type>
+                <description>Alternative to carousel ID. Use the unique identifier of the carousel.</description>
+            </identifier>
+            <template translate="label">
+                <visible>1</visible>
+                <label>Template</label>
+                <type>select</type>
+                <value>carousel/widget.phtml</value>
+                <values>
+                    <default translate="label">
+                        <value>carousel/widget.phtml</value>
+                        <label>Default DaisyUI Carousel</label>
+                    </default>
+                    <hero translate="label">
+                        <value>carousel/hero.phtml</value>
+                        <label>Hero Banner Style</label>
+                    </hero>
+                </values>
+            </template>
+        </parameters>
+    </carousel_widget>
+</widgets>

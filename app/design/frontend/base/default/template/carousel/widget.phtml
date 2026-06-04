@@ -1,0 +1,113 @@
+<?php
+/** @var Mageaustralia_Carousel_Block_Widget $this */
+$carousel = $this->getCarousel();
+if (!$carousel || !$carousel->getId() || !$carousel->getStatus()) {
+    return;
+}
+
+$slides = $this->getSlides();
+if (count($slides) === 0) {
+    return;
+}
+
+$htmlId = $this->getCarouselHtmlId();
+$slideCount = count($slides);
+$autoplayAttr = $carousel->getAutoplay() ? ' data-autoplay="' . (int)$carousel->getAutoplaySpeed() . '"' : '';
+$heightStyle = $carousel->getHeight() ? ' style="height:' . $this->escapeHtml($carousel->getHeight()) . '"' : '';
+$slideIndex = 0;
+$slideIds = [];
+foreach ($slides as $s) {
+    $slideIds[] = 'slide-' . $htmlId . '-' . $slideIndex++;
+}
+$slideIndex = 0;
+?>
+<div class="relative w-full">
+<div class="carousel w-full rounded-box"<?= $autoplayAttr ?><?= $heightStyle ?>>
+<?php foreach ($slides as $slide): ?>
+    <?php
+    $slideId = $slideIds[$slideIndex];
+    $prevId = $slideIds[($slideIndex - 1 + $slideCount) % $slideCount];
+    $nextId = $slideIds[($slideIndex + 1) % $slideCount];
+    $hasText = $slide->getTitle() || $slide->getSubtitle() || $slide->getButtons();
+    $buttons = $slide->getButtons();
+    $positionClasses = $this->getTextPositionClasses($slide->getTextPosition() ?: 'center-left');
+    $alignment = $slide->getTextAlignment() ?: 'left';
+    $alignmentClass = $this->getTextAlignmentClass($alignment);
+    $textColor = $this->getSafeTextColor($slide->getTextColor() ?: 'text-white');
+    $textWidth = $slide->getTextWidth() ?: '50%';
+    $overlayOpacity = max(0, min(100, (int)$slide->getOverlayOpacity()));
+    $loading = $slideIndex === 0 ? 'eager' : 'lazy';
+    $imageSources = $this->getImageSources($slide);
+    ?>
+    <div id="<?= $this->escapeHtml($slideId) ?>" class="carousel-item relative w-full">
+        <?php if ($slide->getCustomHtml()): ?>
+            <?= $this->getLayout()->getBlock('formkey') !== false
+                ? Mage::helper('cms')->getBlockTemplateProcessor()->filter($slide->getCustomHtml())
+                : $this->escapeHtml($slide->getCustomHtml()) ?>
+        <?php else: ?>
+            <picture class="w-full">
+                <?php foreach ($imageSources as $source): ?>
+                <source srcset="<?= $this->escapeUrl($source['srcset']) ?>" type="<?= $this->escapeHtml($source['type']) ?>">
+                <?php endforeach; ?>
+                <img src="<?= $this->escapeUrl($slide->getImageUrl()) ?>"
+                     alt="<?= $this->escapeHtml($slide->getTitle()) ?>"
+                     class="w-full object-cover"
+                     loading="<?= $loading ?>">
+            </picture>
+            <?php if ($overlayOpacity > 0): ?>
+            <div class="absolute inset-0 bg-black" style="opacity:<?= $overlayOpacity / 100 ?>"></div>
+            <?php endif; ?>
+            <?php if ($hasText): ?>
+            <div class="absolute inset-0 flex flex-col <?= $positionClasses ?>" style="padding:2rem 5rem;text-shadow:0 1px 4px rgba(0,0,0,0.6)">
+                <div class="<?= $alignmentClass ?>" style="max-width:<?= $this->escapeHtml($textWidth) ?>;max-width:min(<?= $this->escapeHtml($textWidth) ?>,calc(100% - 2rem))">
+                    <?php if ($slide->getTitle()): ?>
+                    <h2 class="text-3xl font-bold <?= $textColor ?> mb-2"><?= $this->escapeHtml($slide->getTitle()) ?></h2>
+                    <?php endif; ?>
+                    <?php if ($slide->getSubtitle()): ?>
+                    <p class="text-lg <?= $textColor ?> mb-4" style="opacity:0.8"><?= $this->escapeHtml($slide->getSubtitle()) ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($buttons)): ?>
+                    <div class="flex flex-wrap gap-3<?= $alignment === 'center' ? ' justify-center' : ($alignment === 'right' ? ' justify-end' : '') ?>">
+                        <?php foreach ($buttons as $button): ?>
+                        <a href="<?= $this->escapeUrl($button['url'] ?? '#') ?>" class="btn <?= $this->getSafeButtonStyle($button['style'] ?? 'btn-primary') ?>"><?= $this->escapeHtml($button['text'] ?? '') ?></a>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+    <?php $slideIndex++; ?>
+<?php endforeach; ?>
+</div>
+<?php if ($slideCount > 1 && $carousel->getShowNavigation()): ?>
+<div style="position:absolute;left:0.75rem;right:0.75rem;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;z-index:10;pointer-events:none">
+    <button class="btn btn-circle btn-sm md:btn-md pointer-events-auto carousel-nav-prev" data-carousel="<?= $this->escapeHtml($htmlId) ?>">&#10094;</button>
+    <button class="btn btn-circle btn-sm md:btn-md pointer-events-auto carousel-nav-next" data-carousel="<?= $this->escapeHtml($htmlId) ?>">&#10095;</button>
+</div>
+<?php endif; ?>
+</div>
+<?php if ($slideCount > 1 && $carousel->getShowDots()): ?>
+<div class="flex w-full justify-center gap-2 py-4">
+    <?php for ($i = 0; $i < $slideCount; $i++): ?>
+    <a href="#<?= $this->escapeHtml($slideIds[$i]) ?>" class="carousel-dot<?= $i === 0 ? ' active' : '' ?>"></a>
+    <?php endfor; ?>
+</div>
+<?php endif; ?>
+
+<script>
+document.querySelectorAll(".carousel-nav-prev, .carousel-nav-next").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        var wrapper = this.closest(".relative");
+        var carousel = wrapper.querySelector(".carousel");
+        var items = carousel.querySelectorAll(".carousel-item");
+        if (!items.length) return;
+        var itemWidth = items[0].offsetWidth;
+        var currentIndex = Math.round(carousel.scrollLeft / itemWidth);
+        var direction = this.classList.contains("carousel-nav-prev") ? -1 : 1;
+        var nextIndex = (currentIndex + direction + items.length) % items.length;
+        items[nextIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    });
+});
+</script>
