@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageaustralia_Carousel
+ *
+ * @copyright  Copyright (c) 2026 Mage Australia (https://mageaustralia.com.au)
+ * @license    https://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>css/carousel/carousel.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/carousel/carousel.js</name></action>
+        </reference>
+    </default>
+</layout>

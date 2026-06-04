@@ -23,7 +23,10 @@
             ["app/code/local/Mageaustralia/Carousel", "app/code/local/Mageaustralia/Carousel"],
             ["app/etc/modules/Mageaustralia_Carousel.xml", "app/etc/modules/Mageaustralia_Carousel.xml"],
             ["app/design/adminhtml/default/default/template/carousel", "app/design/adminhtml/default/default/template/carousel"],
-            ["app/design/frontend/base/default/template/carousel", "app/design/frontend/base/default/template/carousel"]
+            ["app/design/frontend/base/default/template/carousel", "app/design/frontend/base/default/template/carousel"],
+            ["app/design/frontend/base/default/layout/carousel.xml", "app/design/frontend/base/default/layout/carousel.xml"],
+            ["skin/frontend/base/default/css/carousel", "skin/frontend/base/default/css/carousel"],
+            ["skin/frontend/base/default/js/carousel", "skin/frontend/base/default/js/carousel"]
         ]
     }
 }

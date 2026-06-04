@@ -1,0 +1,28 @@
+/* Mageaustralia_Carousel - self-contained carousel (no framework dependency). */
+.mhc { position: relative; width: 100%; }
+.mhc__viewport { overflow: hidden; width: 100%; }
+.mhc__track { display: flex; width: 100%; transition: transform .5s ease; will-change: transform; }
+.mhc__slide { position: relative; flex: 0 0 100%; width: 100%; overflow: hidden; height: var(--mhc-h, auto); }
+.mhc__pic, .mhc__pic img { display: block; width: 100%; }
+.mhc__img { width: 100%; height: 100%; object-fit: cover; }
+.mhc__overlay { position: absolute; inset: 0; background: #000; pointer-events: none; }
+.mhc__caption { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 2rem 5%; box-sizing: border-box; pointer-events: none; }
+.mhc__inner { pointer-events: auto; text-shadow: 0 1px 4px rgba(0, 0, 0, .6); }
+.mhc__title { font-size: 2rem; font-weight: 700; margin: 0 0 .5rem; line-height: 1.15; }
+.mhc__subtitle { font-size: 1.125rem; margin: 0 0 1rem; opacity: .85; }
+.mhc__buttons { display: flex; flex-wrap: wrap; gap: .75rem; }
+.mhc__btn { display: inline-block; padding: .6rem 1.25rem; border-radius: .375rem; background: #1a73e8; color: #fff; text-decoration: none; font-weight: 600; line-height: 1.2; }
+.mhc__btn:hover { opacity: .9; }
+.mhc__nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .4); color: #fff; cursor: pointer; font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.mhc__nav:hover { background: rgba(0, 0, 0, .6); }
+.mhc__nav--prev { left: .75rem; }
+.mhc__nav--next { right: .75rem; }
+.mhc__dots { position: absolute; bottom: 1rem; left: 0; right: 0; z-index: 3; display: flex; justify-content: center; gap: .5rem; }
+.mhc__dot { width: .65rem; height: .65rem; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .5); cursor: pointer; }
+.mhc__dot.is-active { background: #fff; }
+@media (max-width: 768px) {
+    .mhc__caption { padding: 1rem 1.25rem; }
+    .mhc__title { font-size: 1.4rem; }
+    .mhc__subtitle { font-size: 1rem; }
+    .mhc__nav { width: 2.25rem; height: 2.25rem; }
+}
