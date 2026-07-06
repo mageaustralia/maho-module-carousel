@@ -59,34 +59,7 @@
     </admin>
 
     <adminhtml>
-        <menu>
-            <cms>
-                <children>
-                    <carousel translate="title" module="carousel">
-                        <title>DaisyUI Carousel Builder</title>
-                        <sort_order>100</sort_order>
-                        <action>adminhtml/carousel/index</action>
-                    </carousel>
-                </children>
-            </cms>
-        </menu>
 
-        <acl>
-            <resources>
-                <admin>
-                    <children>
-                        <cms>
-                            <children>
-                                <carousel translate="title" module="carousel">
-                                    <title>DaisyUI Carousel Builder</title>
-                                    <sort_order>100</sort_order>
-                                </carousel>
-                            </children>
-                        </cms>
-                    </children>
-                </admin>
-            </resources>
-        </acl>
 
         <layout>
             <updates>
