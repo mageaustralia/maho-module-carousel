@@ -69,7 +69,7 @@ class Mageaustralia_Carousel_Model_Image extends Mage_Core_Model_Abstract
         $originalExt = strtolower($pathInfo['extension']);
 
         // Load the image
-        $image = $this->imageManager->read($sourceFile);
+        $image = $this->imageManager->decodePath($sourceFile);
 
         // Resize if dimensions specified
         if ($options['width'] || $options['height']) {
@@ -113,7 +113,7 @@ class Mageaustralia_Carousel_Model_Image extends Mage_Core_Model_Abstract
 
         // Generate thumbnail if requested
         if ($options['generateThumbnail']) {
-            $thumbImage = $this->imageManager->read($sourceFile);
+            $thumbImage = $this->imageManager->decodePath($sourceFile);
             $thumbImage->cover(
                 $options['thumbnailWidth'],
                 $options['thumbnailHeight'],
